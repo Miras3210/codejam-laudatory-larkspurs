@@ -1,6 +1,4 @@
 [project]
-# This section contains metadata about your project.
-# Don't forget to change the name, description, and authors to match your project!
 name = "command-line-image-editor"
 description = "A simple yet interesting image editor."
 authors = [
@@ -8,7 +6,7 @@ authors = [
     { name = "Julien"},
     { name = "Jont"},
     { name = "Philip"},
-    { name = "Ricky P"},
+    { name = "Richard Szilagyi", email = "szprichard@proton.me"},
     { name = "Mark"}
 ]
 version = "0.1.0"
