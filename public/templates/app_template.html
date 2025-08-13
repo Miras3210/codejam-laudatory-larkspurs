@@ -1,94 +1,93 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr" lwt-newtab-brighttext="">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>App template</title>
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.28.1/full/pyodide.js"></script>
-    <style>
-      html,
-      body {
-        margin: 0;
-        height: 100%;
-        overflow: hidden;
-        font-family: monospace;
-      }
-      .image {
-        background-color: #adadad;
-        width: 100%;
-        height: 50%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-      .separator {
-        background-color: rgb(119, 119, 119);
-        width: 100%;
-        height: 1%;
-        cursor: pointer;
-      }
-      .terminal {
-        font-size: 1.5em;
-        padding: 20px;
-        background-color: black;
-        color: white;
-        width: 100%;
-        height: 49%;
-      }
-      .document-panel{
-        position:fixed;
-        top: 0;
-        right: 0;
-        width: 50px;
-        height: 5%;
-        background-color: grey;
-        transition: width 0.3s ease, height 0.3s ease;
-        z-index: 100;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      .document-panel.open{
-        width: 40%;
-        height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-      }
-      .expand-btn{
-        background-color: rgb(119, 119, 119);
-        cursor: pointer;
-        width: 100%;
-        text-align: center;
-      }
-      .documents{
-        text-align: left;
-        padding: 10%;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="image" id="image"><h1>[Placeholder Image]</h1></div>
-    <div class="separator" id="separator"></div>
-    <div class="terminal" id="terminal">
-      Image editor v2.1 $ ping<br>
-      pong!<br>
-      Image editor v2.1 $
-    </div>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>App template</title>
+		<script src="https://cdn.jsdelivr.net/pyodide/v0.28.1/full/pyodide.js"></script>
+		<style>
+			html,
+			body {
+				margin: 0;
+				height: 100%;
+				overflow: hidden;
+				font-family: monospace;
+			}
+			.image {
+				background-color: #adadad;
+				width: 100%;
+				height: 50%;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+			.separator {
+				background-color: rgb(119, 119, 119);
+				width: 100%;
+				height: 1%;
+				cursor: pointer;
+			}
+			.terminal {
+				font-size: 1.5em;
+				padding: 20px;
+				background-color: black;
+				color: white;
+				width: 100%;
+				height: 49%;
+			}
+			.document-panel {
+				position: fixed;
+				top: 0;
+				right: 0;
+				width: 50px;
+				height: 5%;
+				background-color: grey;
+				transition: width 0.3s ease, height 0.3s ease;
+				z-index: 100;
+				overflow: hidden;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			.document-panel.open {
+				width: 40%;
+				height: 100%;
+				overflow-y: auto;
+				overflow-x: hidden;
+			}
+			.expand-btn {
+				background-color: rgb(119, 119, 119);
+				cursor: pointer;
+				width: 100%;
+				text-align: center;
+			}
+			.documents {
+				text-align: left;
+				padding: 10%;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="image" id="image"><h1>[Placeholder Image]</h1></div>
+		<div class="separator" id="separator"></div>
+		<div class="terminal" id="terminal">
+			Image editor v2.1 $ ping<br />
+			pong!<br />
+			Image editor v2.1 $
+		</div>
 
-    <div class="document-panel" id="DocumentPanel">
-      <div class="expand-btn" id="ExpandBtn"><h3>☰</h3></div>
-      <div class="documents">
-        <h2>How to use the app:</h2>
-      </div>
-    </div>
+		<div class="document-panel" id="DocumentPanel">
+			<div class="expand-btn" id="ExpandBtn"><h3>☰</h3></div>
+			<div class="documents">
+				<h2>How to use the app:</h2>
+			</div>
+		</div>
 
-
-    <script>
-      (async () => {
-        const pyodide = await loadPyodide();
-        await pyodide.runPythonAsync(`
+		<script>
+			(async () => {
+				const pyodide = await loadPyodide();
+				await pyodide.runPythonAsync(`
             from js import document
             from js import window
             from pyodide.ffi import create_proxy
@@ -163,9 +162,7 @@
             # when dragging separator move it to the mouse
             document.addEventListener('mousemove', move_separator_callback)
           `);
-      })();
-    </script>
-
-
-  </body>
+			})();
+		</script>
+	</body>
 </html>

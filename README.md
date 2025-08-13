@@ -25,8 +25,8 @@ project/
 │    lint.yaml
 │
 ├─ public/
+│    templates/app_template.html
 │    index.html
-│    templates/apptemplate.html
 │
 ├─ samples/
 │    Pipfile
