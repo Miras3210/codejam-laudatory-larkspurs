@@ -1,14 +1,16 @@
 # -Good Project name-
 
-<center>
-    <img src="logo.png" alt="Logo" width="156" />
-</center>
+<p align="center">
+    <img src="logo.png" alt="Logo" />
+</p>
 
-_An image editor. In the terminal. In the browser._
+<p align="center">
+    <em>An image editor. In the terminal. In the browser.</em>
+</p>
 
 ## Project Structure
 
-```
+```text
 project/
 │   .gitignore
 │   .pre-commit-config.yaml
@@ -29,9 +31,9 @@ project/
 ├─ samples/
 │    Pipfile
 │
-└─ src/
+├─ src/
 │    hello.py
-│    main.py
+└─   main.py
 ```
 
 ## Setup
@@ -89,6 +91,4 @@ This will serve the project on `http://localhost:8000` after building it to `bui
 
 ## Contributors
 
-<a href="https://github.com/Miras3210/codejam-laudatory-larkspurs/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Miras3210/codejam-laudatory-larkspurs" alt="List of contributors" />
-</a>
+[![Contributors](https://contrib.rocks/image?repo=Miras3210/codejam-laudatory-larkspurs)](https://github.com/Miras3210/codejam-laudatory-larkspurs/graphs/contributors)
