@@ -61,7 +61,6 @@ class ImagePreview(Element):
 
     def _on_file_processed(self, data_url: str) -> None:
         """Handle successfully processed file."""
-        self.image.load_from_image_link(data_url)
         self.image_manager.display_image(data_url)
 
     def _on_error(self, error_message: str) -> None:
