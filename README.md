@@ -1,4 +1,4 @@
-# -Good Project name-
+# Good Image Terminal
 
 <p align="center">
     <img src="logo.png" alt="Logo" />
@@ -103,7 +103,7 @@ pip install --group dev
 _If it gives errors try:_
 
 ```shell
-python -m pip install --upgrade pip  
+python -m pip install --upgrade pip
 ```
 
 4. If we want to exit our enviroment we do

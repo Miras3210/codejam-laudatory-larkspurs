@@ -1,5 +1,5 @@
 [project]
-name = "command-line-image-editor"
+name = "good-image-terminal"
 description = "A simple yet interesting image editor."
 authors = [
     { name = "Mira"},
