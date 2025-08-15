@@ -21,15 +21,13 @@ RUN pip install --no-cache-dir .
 COPY public ./public
 COPY src ./src
 
-# Build at container start so edits can be picked up by rebuilding container only.
-
 EXPOSE 8000
 
 CMD ["bash", "-c", "python build.py --serve --port ${PORT}"]
 
-#########################################
-# Usage
-#   docker build -t good-image-terminal:latest .
-#   docker run --rm --name good-image-terminal -e PORT=8000 -p 8000:8000 good-image-terminal:latest
-# App: http://localhost:8000
-#########################################
+#####################################################################################################
+# Usage                                                                                             #
+#   docker build -t good-image-terminal:latest .                                                    #
+#   docker run --rm --name good-image-terminal -e PORT=8000 -p 8000:8000 good-image-terminal:latest #
+# App: http://localhost:8000                                                                        #
+#####################################################################################################
