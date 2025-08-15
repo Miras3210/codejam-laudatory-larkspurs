@@ -13,6 +13,7 @@
 ```text
 codejam-laudatory-larkspurs/
 ├─ build.py                  # Build + serve script (Pyodide bundling)
+├─ Dockerfile                # Docker configuration
 ├─ pyproject.toml            # Project & dependency metadata
 ├─ uv.lock                   # Locked dependency versions
 ├─ README.md / CONTRIBUTING.md
