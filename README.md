@@ -122,6 +122,39 @@ python build.py --serve --port 8000
 
 This will serve the project on `http://localhost:8000` after building it to `build/`. If you make changes to your code, run `build.py` again to rebuild the project.
 
+### Running with Docker
+
+You can run the app without a local Python setup using the provided `Dockerfile`.
+
+Build the image:
+
+```shell
+docker build -t good-image-terminal:latest .
+```
+
+Run (default port `8000`):
+
+```shell
+docker run --rm --name good-image-terminal -e PORT=8000 -p 8000:8000 good-image-terminal:latest
+```
+
+Custom port:
+
+```shell
+docker run --rm --name good-image-terminal -e PORT=9000 -p 9000:9000 good-image-terminal:latest
+```
+
+The container runs `python build.py --serve --port $PORT` on startup:
+
+- Builds fresh each run (output in container at `/app/build`).
+- Serves the site at `http://localhost:<PORT>`.
+
+Faster rebuilds during iteration:
+
+```shell
+docker build -t good-image-terminal:latest .  # after changing code
+```
+
 ## Contributors
 
 [![Contributors](https://contrib.rocks/image?repo=Miras3210/codejam-laudatory-larkspurs)](https://github.com/Miras3210/codejam-laudatory-larkspurs/graphs/contributors)
