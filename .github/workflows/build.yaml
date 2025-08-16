@@ -1,0 +1,82 @@
+name: Build project and publish
+
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+concurrency:
+    group: build-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: write
+
+jobs:
+    build:
+        name: Build the project
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install .
+
+            - name: Build project
+              run: python build.py
+
+    publish:
+        name: Publish built project
+        needs: build
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Set up Git
+              run: |
+                  BOT_USER="github-actions[bot]"
+                  BOT_EMAIL="41898282+github-actions[bot]@users.noreply.github.com"
+                  git config user.name "$BOT_USER"
+                  git config user.email "$BOT_EMAIL"
+
+            - name: Copy build contents to temp directory
+              run: |
+                  mkdir temp-build
+                  cp -r build/* temp-build/
+
+            - name: Checkout build branch
+              run: |
+                  git fetch origin build
+                  git switch build || git checkout --orphan build
+
+            - name: Clean current contents
+              if: ${{ github.ref_name == 'build' }}
+              run: |
+                  git rm -rf . || true
+                  rm -rf *
+
+            - name: Move build contents back
+              if: ${{ github.ref_name == 'build' }}
+              run: |
+                  cp -r temp-build/* .
+                  rm -rf temp-build
+
+            - name: Commit and push changes
+              if: ${{ github.ref_name == 'build' }}
+              run: |
+                  git add .
+                  git commit -m "Deploying production build from @ ${GITHUB_SHA::7} 🚀" || echo "No changes to commit"
+                  git push origin build --force
+
+        timeout-minutes: 15
