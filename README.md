@@ -20,6 +20,8 @@ codejam-laudatory-larkspurs/
 ├─ LICENSE
 ├─ .pre-commit-config.yaml   # Lint & format hooks
 ├─ .github/workflows/
+│   ├─ deploy.yaml           # CI deployment pipeline
+|   ├─ build.yaml            # CI build pipeline
 │   └─ lint.yaml             # CI lint pipeline
 ├─ public/                   # Static assets
 │   ├─ index.html
