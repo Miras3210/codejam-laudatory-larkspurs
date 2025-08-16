@@ -1,44 +1,65 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr" lwt-newtab-brighttext="">
-	<head>
-		<meta charset="utf-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-		/>
-		<meta
-			name="author"
-			content="Jont, Julien, Mira, Philip, Richard Szilagyi <szprichard@proton.me>, Mark"
-		/>
-		<meta
-			name="description"
-			content="An image editor. In the terminal. In the browser."
-		/>
-		<title>Good Image Terminal</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <meta
+      name="author"
+      content="Jont, Julien, Mira, Philip, Richard Szilagyi <szprichard@proton.me>, Mark"
+    />
+    <meta
+      name="description"
+      content="An image editor. In the terminal. In the browser."
+    />
+    <title>Good Image Terminal</title>
 
-		<link rel="icon" href="favicon.ico" sizes="any" />
-		<link rel="icon" type="image/svg+xml" href="favicon.svg" />
-		<link rel="apple-touch-icon" href="apple-touch-icon.png" />
-		<link rel="manifest" href="site.webmanifest" />
-		<meta name="theme-color" content="#000000" />
-		<script src="https://cdn.jsdelivr.net/pyodide/v0.28.1/full/pyodide.js"></script>
-	</head>
-	<body>
-		<script type="text/javascript">
-			(async () => {
-				const pyodide = await loadPyodide();
-				await pyodide.loadPackage("pillow");
-				await pyodide.runPythonAsync(`
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <meta name="theme-color" content="#000000" />
+    <style>
+      body {
+        color: white;
+        font-family: monospace;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #262626;
+      }
+      #loading {
+        width: 100vw;
+        height: 100vh;
+        font-size: 1.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: repeating-conic-gradient(#202020 0 25%, #0000 0 50%) 50% /
+          2em 2em;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.28.1/full/pyodide.js"></script>
+  </head>
+  <body>
+    <div id="loading">Loading Python...</div>
+    <script type="text/javascript">
+      (async () => {
+        const pyodide = await loadPyodide();
+        await pyodide.loadPackage("pillow");
+        await pyodide.runPythonAsync(`
 					from pyodide.http import pyfetch
 					response = await pyfetch("src.zip")
 					await response.unpack_archive()
 				`);
-				const main = await pyodide.pyimport("main");
-				await main.main();
-			})();
-		</script>
-		<noscript>
-			<p>Please enable JavaScript to run this application.</p>
-		</noscript>
-	</body>
+        const main = await pyodide.pyimport("main");
+        await main.main();
+      })();
+    </script>
+    <noscript>
+      <p>Please enable JavaScript to run this application.</p>
+    </noscript>
+  </body>
 </html>
