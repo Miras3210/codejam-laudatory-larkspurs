@@ -1,0 +1,42 @@
+name: Deploy to Vercel
+
+env:
+    VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+    VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+on:
+    push:
+        branches: [build]
+    workflow_dispatch:
+
+concurrency:
+    group: deploy-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    deploy:
+        name: Deploy production build
+        runs-on: ubuntu-latest
+        environment:
+            name: production
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  ref: build
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "22"
+                  cache: "npm"
+
+            - name: Install Vercel CLI
+              run: npm install -g vercel@latest
+
+            - name: Link and deploy with Vercel
+              run: |
+                  vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+
+        timeout-minutes: 15
