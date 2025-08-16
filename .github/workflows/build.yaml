@@ -18,7 +18,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout
+            - name: Checkout repository
               uses: actions/checkout@v4
 
             - name: Set up Python
@@ -34,49 +34,51 @@ jobs:
             - name: Build project
               run: python build.py
 
+            - name: Upload build artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: build
+                  path: build
+                  if-no-files-found: error
+
     publish:
-        name: Publish built project
+        name: Publish build artifact
         needs: build
         runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/main'
 
         steps:
-            - name: Checkout
+            - name: Checkout repository
               uses: actions/checkout@v4
 
-            - name: Set up Git
+            - name: Configure Git
               run: |
-                  BOT_USER="github-actions[bot]"
+                  BOT_NAME="github-actions[bot]"
                   BOT_EMAIL="41898282+github-actions[bot]@users.noreply.github.com"
-                  git config user.name "$BOT_USER"
+                  git config user.name "$BOT_NAME"
                   git config user.email "$BOT_EMAIL"
 
-            - name: Copy build contents to temp directory
+            - name: Prepare build branch
               run: |
-                  mkdir temp-build
-                  cp -r build/* temp-build/
+                  set -e
+                  if git ls-remote --exit-code origin build; then
+                    git fetch origin build:build
+                    git checkout build
+                  else
+                    git checkout --orphan build
+                  fi
+                  find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
 
-            - name: Checkout build branch
-              run: |
-                  git fetch origin build
-                  git switch build || git checkout --orphan build
+            - name: Download build artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: build
+                  path: .
 
-            - name: Clean current contents
-              if: ${{ github.ref_name == 'build' }}
-              run: |
-                  git rm -rf . || true
-                  rm -rf *
-
-            - name: Move build contents back
-              if: ${{ github.ref_name == 'build' }}
-              run: |
-                  cp -r temp-build/* .
-                  rm -rf temp-build
-
-            - name: Commit and push changes
-              if: ${{ github.ref_name == 'build' }}
+            - name: Commit build folder
               run: |
                   git add .
-                  git commit -m "Deploying production build from @ ${GITHUB_SHA::7} 🚀" || echo "No changes to commit"
-                  git push origin build --force
+                  git diff --cached --quiet && echo "No build changes to commit" || git commit -m "Deploying production from @ ${GITHUB_SHA::7} 🚀"
+                  git push origin build
 
         timeout-minutes: 15
