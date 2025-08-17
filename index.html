@@ -49,7 +49,11 @@
       (async () => {
         const pyodide = await loadPyodide();
         await pyodide.loadPackage("pillow");
+        await pyodide.loadPackage("micropip");
         await pyodide.runPythonAsync(`
+					import micropip
+					await micropip.install("webcolors")
+
 					from pyodide.http import pyfetch
 					response = await pyfetch("src.zip")
 					await response.unpack_archive()
