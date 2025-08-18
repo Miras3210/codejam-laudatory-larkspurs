@@ -132,18 +132,10 @@ class ImageDisplayManager:
         natural_width = self.image_element["naturalWidth"]
         natural_height = self.image_element["naturalHeight"]
         intrinsic_mouse_x = int(
-            (
-                (event.clientX - self.image_element["offsetLeft"])
-                / self.image_element["clientWidth"]
-            )
-            * natural_width,
+            ((event.clientX - self.image_element["offsetLeft"]) / self.image_element["clientWidth"]) * natural_width,
         )
         intrinsic_mouse_y = int(
-            (
-                (event.clientY - self.image_element["offsetTop"])
-                / self.image_element["clientHeight"]
-            )
-            * natural_height,
+            ((event.clientY - self.image_element["offsetTop"]) / self.image_element["clientHeight"]) * natural_height,
         )
         intrinsic_mouse_x = max(0, min(intrinsic_mouse_x, natural_width - 1))
         intrinsic_mouse_y = max(0, min(intrinsic_mouse_y, natural_height - 1))
