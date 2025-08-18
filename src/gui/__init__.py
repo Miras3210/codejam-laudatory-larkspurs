@@ -134,11 +134,13 @@ body {
 
 
 def init_gui() -> Element:
-    """Initialize the GUI.
+    """Initialize the top-level layout for the application.
+
+    ---
 
     Authors:
-        Jont
-        Ricky
+        - Jont
+        - Ricky
     """
     # Hide the loading screen
     js.document.getElementById("loading").style.display = "none"
