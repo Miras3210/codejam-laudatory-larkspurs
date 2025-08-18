@@ -9,8 +9,10 @@ from pyodide.ffi import create_proxy
 class FileUploadHandler:
     """Handles file upload functionality via click and file processing.
 
+    ---
+
     Authors:
-        Ricky
+        - Ricky
     """
 
     def __init__(
@@ -24,12 +26,25 @@ class FileUploadHandler:
             on_file_processed: Callback when file is successfully processed with data URL
             on_error: Callback when an error occurs during file processing
 
+        ---
+
+        :author: Ricky
+
         """
         self.on_file_processed = on_file_processed
         self.on_error = on_error
 
     def handle_click_upload(self, _event: Any) -> None:  # noqa: ANN401
-        """Handle click to upload functionality."""
+        """Handle click to upload functionality.
+
+        Args:
+            _event: The mouse click event
+
+        ---
+
+        :author: Ricky
+
+        """
         # Create a hidden file input
         file_input = js.document.createElement("input")
         file_input.type = "file"
@@ -50,7 +65,16 @@ class FileUploadHandler:
         js.document.body.removeChild(file_input)
 
     def process_file(self, file: Any) -> None:  # noqa: ANN401
-        """Process the uploaded file and convert it to a data URL."""
+        """Process the uploaded file and convert it to a data URL.
+
+        Args:
+            file: The file to process
+
+        ---
+
+        :author: Ricky
+
+        """
         reader = js.FileReader.new()
 
         # Create a persistent proxy for the load event handler
