@@ -34,6 +34,7 @@ class ImagePreview(Element):
         )
         self.class_name = "image-preview"
 
+        # Cursor info element
         self.cursor_info = Element(
             "div",
             parent=self,
@@ -47,8 +48,26 @@ class ImagePreview(Element):
         """,
         )
 
+        # Color info element
+        self.color_info = Element(
+            "div",
+            parent=self,
+            style="""
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: white;
+            font-size: 14px;
+            z-index: 1;
+            text-align: right;
+        """,
+        )
+        self.color_info.text = "R: - G: - B: -"
+
         # Initialize the image display manager
-        self.image_manager = ImageDisplayManager(self, self.cursor_info)
+        self.image_manager = ImageDisplayManager(
+            self, self.cursor_info, self.color_info
+        )
 
         # Initialize the file upload handler
         self.file_handler = FileUploadHandler(
