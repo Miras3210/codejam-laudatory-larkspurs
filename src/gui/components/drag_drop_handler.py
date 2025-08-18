@@ -7,8 +7,10 @@ from gui.element import Element
 class DragDropHandler:
     """Handles drag and drop functionality for file uploads.
 
+    ---
+
     Authors:
-        Ricky
+        - Ricky
     """
 
     def __init__(
@@ -19,7 +21,7 @@ class DragDropHandler:
         on_drag_leave: Callable[[], None] | None = None,
         on_error: Callable[[str], None] | None = None,
     ) -> None:
-        """Initialize drag drop handler.
+        """Initialize drag drop handler element.
 
         Args:
             element: The element to attach drag/drop events to
@@ -27,6 +29,10 @@ class DragDropHandler:
             on_drag_enter: Optional callback when drag enters
             on_drag_leave: Optional callback when drag leaves
             on_error: Optional callback for error handling
+
+        ---
+
+        :author: Ricky
 
         """
         self.element = element
@@ -37,7 +43,13 @@ class DragDropHandler:
         self.drag_overlay = None
 
     def setup_drag_overlay(self) -> Element:
-        """Create and return the drag overlay element."""
+        """Create and return the drag overlay element.
+
+        ---
+
+        :author: Ricky
+
+        """
         self.drag_overlay = Element(
             "div",
             parent=self.element,
@@ -53,7 +65,7 @@ class DragDropHandler:
             justify-content: center;
             align-items: center;
             z-index: 10;
-        """,
+            """,
         )
 
         overlay_text = Element(
@@ -65,28 +77,53 @@ class DragDropHandler:
             font-weight: bold;
             text-align: center;
             user-select: none;
-        """,
+            """,
         )
         overlay_text.text = "Drop image here"
 
         return self.drag_overlay
 
     def setup_events(self) -> None:
-        """Set up drag and drop event handlers."""
+        """Set up drag and drop event handlers.
+
+        ---
+
+        :author: Ricky
+
+        """
         self.element.on("dragover", self._handle_drag_over)
         self.element.on("dragenter", self._handle_drag_enter)
         self.element.on("dragleave", self._handle_drag_leave)
         self.element.on("drop", self._handle_drop)
 
     def _handle_drag_over(self, event: Any) -> None:  # noqa: ANN401
-        """Handle drag over event."""
+        """Handle drag over event.
+
+        Args:
+            event: The mouse drag event
+
+        ---
+
+        :author: Ricky
+
+        """
         event.preventDefault()
         event.stopPropagation()
 
     def _handle_drag_enter(self, event: Any) -> None:  # noqa: ANN401
-        """Handle drag enter event."""
+        """Handle drag enter event.
+
+        Args:
+            event: The mouse drag event
+
+        ---
+
+        :author: Ricky
+
+        """
         event.preventDefault()
         event.stopPropagation()
+
         if self.drag_overlay:
             self.drag_overlay["style"].display = "flex"
         self.element["style"].borderColor = "#007bff"
@@ -96,7 +133,16 @@ class DragDropHandler:
             self.on_drag_enter()
 
     def _handle_drag_leave(self, event: Any) -> None:  # noqa: ANN401
-        """Handle drag leave event."""
+        """Handle drag leave event.
+
+        Args:
+            event: The mouse drag event
+
+        ---
+
+        :author: Ricky
+
+        """
         event.preventDefault()
         event.stopPropagation()
 
@@ -124,7 +170,16 @@ class DragDropHandler:
                 self.on_drag_leave()
 
     def _handle_drop(self, event: Any) -> None:  # noqa: ANN401
-        """Handle file drop event."""
+        """Handle file drop event.
+
+        Args:
+            event: The mouse drag event
+
+        ---
+
+        :author: Ricky
+
+        """
         event.preventDefault()
         event.stopPropagation()
 
