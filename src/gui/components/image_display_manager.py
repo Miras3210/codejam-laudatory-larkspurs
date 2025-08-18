@@ -1,37 +1,36 @@
 from typing import Any
 
+import js  # type: ignore[import]
+
 from gui.element import Element
 
 
 class ImageDisplayManager:
-    """Manages image display and placeholder functionality.
-
-    Authors:
-        Ricky
-    """
+    """Manages image display functionality."""
 
     image_container: Element
     image_element: Element
     placeholder_text: Element
-    cursor_info_element: Element
+    cursor_info: Element
+    color_info: Element | None
 
-    def __init__(self, container: Element, cursor_info_element: Element) -> None:
-        """Initialize image display manager.
-
-        Args:
-            container: The container element to create image display elements in
-            cursor_info_element: The cursor info element to update
-
-        """
+    def __init__(
+        self,
+        container: Element,
+        cursor_info_element: Element,
+        color_info_element: Element | None = None,
+    ) -> None:
         self.container = container
         self.current_image_src: str | None = None
         self.cursor_info = cursor_info_element
-
+        self.color_info = color_info_element
+        self._canvas_context: Any | None = None  # noqa: ANN401
         self._setup_elements()
 
     def _setup_elements(self) -> None:
         """Create the image container, image element, and placeholder text."""
-        # Create container for image or placeholder
+
+        # Image container element
         self.image_container = Element(
             "div",
             parent=self.container,
@@ -45,7 +44,7 @@ class ImageDisplayManager:
         """,
         )
 
-        # Create image element (initially hidden)
+        # Image element
         self.image_element = Element(
             "img",
             parent=self.image_container,
@@ -57,43 +56,72 @@ class ImageDisplayManager:
         """,
         )
 
-        # Create placeholder text
-        self.placeholder_text = Element(
-            "div",
-            parent=self.image_container,
-            style="""
-            font-size: 18px;
-            color: #666;
-            text-align: center;
-            user-select: none;
-        """,
-        )
-        self.placeholder_text.text = "Loading default image..."
-
-        # Add mouse move event to update cursor info
+        # Events
         self.image_element.on("mousemove", self._on_image_mouse_move)
-
-        # Add mouse leave event to clear cursor info
         self.image_element.on("mouseleave", self._on_image_mouse_leave)
+        self.image_element.on("load", self._on_image_load)
+
+    def _on_image_load(self, _event: Any) -> None:  # noqa: ANN401
+        """Prepare an offscreen canvas for pixel color sampling."""
+        try:
+            natural_width = self.image_element["naturalWidth"]
+            natural_height = self.image_element["naturalHeight"]
+            canvas = js.document.createElement("canvas")
+            canvas.width = natural_width
+            canvas.height = natural_height
+            ctx = canvas.getContext("2d")
+            ctx.drawImage(self.image_element.html_element, 0, 0)
+            self._canvas_context = ctx
+        except (AttributeError, RuntimeError) as exc:  # pragma: no cover
+            print(f"Failed to prepare canvas for color sampling: {exc}")
 
     def _on_image_mouse_move(self, event: Any) -> None:  # noqa: ANN401
-        """Handle mouse movement over the image to update cursor info."""
-        if self.current_image_src:
-            intrinsic_mouse_x = int(
-                ((event.clientX - self.image_element["offsetLeft"]) / self.image_element["clientWidth"])
-                * self.image_element["naturalWidth"],
-            )
-            intrinsic_mouse_y = int(
-                ((event.clientY - self.image_element["offsetTop"]) / self.image_element["clientHeight"])
-                * self.image_element["naturalHeight"],
-            )
-            self.cursor_info.text = f"X: {intrinsic_mouse_x}, Y: {intrinsic_mouse_y}"
-        else:
+        if not self.current_image_src:
             self.cursor_info.text = ""
+            if self.color_info is not None:
+                self.color_info.text = ""
+            return
+
+        natural_width = self.image_element["naturalWidth"]
+        natural_height = self.image_element["naturalHeight"]
+        intrinsic_mouse_x = int(
+            (
+                (event.clientX - self.image_element["offsetLeft"])
+                / self.image_element["clientWidth"]
+            )
+            * natural_width,
+        )
+        intrinsic_mouse_y = int(
+            (
+                (event.clientY - self.image_element["offsetTop"])
+                / self.image_element["clientHeight"]
+            )
+            * natural_height,
+        )
+        intrinsic_mouse_x = max(0, min(intrinsic_mouse_x, natural_width - 1))
+        intrinsic_mouse_y = max(0, min(intrinsic_mouse_y, natural_height - 1))
+        self.cursor_info.text = f"X: {intrinsic_mouse_x}, Y: {intrinsic_mouse_y}"
+
+        if self.color_info is not None and self._canvas_context is not None:
+            try:
+                pixel = self._canvas_context.getImageData(
+                    intrinsic_mouse_x, intrinsic_mouse_y, 1, 1
+                ).data
+                r, g, b = pixel[0], pixel[1], pixel[2]
+                self.color_info.text = f"R: {r} G: {g} B: {b}"
+            except (
+                AttributeError,
+                RuntimeError,
+                ValueError,
+            ) as exc:  # pragma: no cover
+                self.color_info.text = "R: - G: - B: -"
+                print(f"Color sample error: {exc}")
 
     def _on_image_mouse_leave(self, _event: Any) -> None:  # noqa: ANN401
         """Clear cursor info when mouse leaves the image."""
         self.cursor_info.text = ""
+        if self.color_info is not None:
+            self.color_info.text = ""
 
     def display_image(self, image_src: str) -> None:
         """Display an image in the preview area."""
