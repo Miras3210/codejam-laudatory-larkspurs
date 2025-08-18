@@ -1,5 +1,3 @@
-"""Layout component for organizing GUI elements with resizable sections."""
-
 from typing import Any
 
 from gui.components.description import Description
@@ -14,13 +12,24 @@ from terminal import Terminal
 class Layout(Element):
     """Main layout component that manages image preview and terminal sections with a resizable separator.
 
+    ---
+
     Authors:
-        Jont
-        Ricky
+        - Jont
+        - Ricky
     """
 
     def __init__(self, parent: HTMLElement | Element | None = None) -> None:
-        """Initialize the layout component."""
+        """Initialize the main layout component.
+
+        Args:
+            parent: Optional parent element that will contain this layout. If `None`, it becomes a
+                root component.
+        ---
+
+        :author: Jont
+
+        """
         super().__init__(
             tag_name="div",
             parent=parent,
@@ -51,13 +60,35 @@ class Layout(Element):
         Args:
             mouse_y: Mouse Y position for calculating new height
 
+        ---
+
+        :author: Ricky
+
         """
         self.image_preview["style"].height = f"{mouse_y}px"
 
     def handle_global_mouse_up(self, event: Any) -> None:  # noqa: ANN401
-        """Handle global mouse up event to stop separator dragging."""
+        """Handle global mouse up event to stop separator dragging.
+
+        Args:
+            event: Mouse event data triggering the end of the drag.
+
+        ---
+
+        :author: Ricky
+
+        """
         self.separator.handle_mouse_up(event)
 
     def handle_global_mouse_move(self, event: Any) -> None:  # noqa: ANN401
-        """Handle global mouse move event for separator dragging."""
+        """Handle global mouse move event for separator dragging.
+
+        Args:
+            event: Mouse event data triggering the start of the drag.
+
+        ---
+
+        :author: Ricky
+
+        """
         self.separator.handle_mouse_move(event)
