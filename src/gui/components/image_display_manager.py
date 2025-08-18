@@ -11,8 +11,8 @@ class ImageDisplayManager:
     ---
 
     Authors:
-        Jont
-        Ricky
+        - Jont
+        - Ricky
     """
 
     image_container: Element
