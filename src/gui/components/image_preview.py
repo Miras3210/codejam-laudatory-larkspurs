@@ -7,14 +7,28 @@ from gui.element import Element, HTMLElement
 
 
 class ImagePreview(Element):
-    """A component for displaying an image preview with a drag-drop upload functionality.
+    """An image preview component for displaying an image with a drag-drop upload functionality.
+
+    ---
 
     Authors:
-        Jont
-        Ricky
+        - Jont
+        - Ricky
     """
 
     def __init__(self, parent: HTMLElement | Element | None = None) -> None:
+        """Initialize the image preview element.
+
+        Args:
+            parent: The parent element to attach this preview to
+
+        ---
+
+        Authors:
+            - Jont (`cursor_info`)
+            - Ricky (`color_info`)
+
+        """
         super().__init__(
             tag_name="div",
             parent=parent,
@@ -30,7 +44,7 @@ class ImagePreview(Element):
             position: relative;
             border: 2px dashed transparent;
             transition: border-color 0.3s ease, background-color 0.3s ease;
-        """,
+            """,
         )
         self.class_name = "image-preview"
 
@@ -45,7 +59,7 @@ class ImagePreview(Element):
             color: white;
             font-size: 14px;
             z-index: 1;
-        """,
+            """,
         )
 
         # Color info element
@@ -60,13 +74,15 @@ class ImagePreview(Element):
             font-size: 14px;
             z-index: 1;
             text-align: right;
-        """,
+            """,
         )
         self.color_info.text = "R: - G: - B: -"
 
         # Initialize the image display manager
         self.image_manager = ImageDisplayManager(
-            self, self.cursor_info, self.color_info
+            self,
+            self.cursor_info,
+            self.color_info,
         )
 
         # Initialize the file upload handler
@@ -93,20 +109,56 @@ class ImagePreview(Element):
         self.image = None
 
     def _on_file_processed(self, data_url: str) -> None:
-        """Handle successfully processed file."""
+        """Handle successfully processed file.
+
+        Args:
+            data_url: The data URL of the processed image
+
+        ---
+
+        :author: Ricky
+
+        """
         if self.image is not None:
             self.image.load_from_image_link(data_url)
         else:
             self.image_manager.display_image(data_url)
 
     def _on_error(self, error_message: str) -> None:
-        """Handle file processing error."""
+        """Handle file processing error.
+
+        Args:
+            error_message: The error message to display
+
+        ---
+
+        :author: Ricky
+
+        """
         self.image_manager.show_error(error_message)
 
     def _on_file_drop(self, file: Any) -> None:  # noqa: ANN401
-        """Handle file drop from drag and drop."""
+        """Handle file drop from drag and drop.
+
+        Args:
+            file: The dropped file
+
+        ---
+
+        :author: Ricky
+
+        """
         self.file_handler.process_file(file)
 
     def display_image(self, image_src: str) -> None:
-        """Display an image in the preview area."""
+        """Display an image in the preview area.
+
+        Args:
+            image_src: The source URL of the image to display
+
+        ---
+
+        :author: Ricky
+
+        """
         self.image_manager.display_image(image_src)
