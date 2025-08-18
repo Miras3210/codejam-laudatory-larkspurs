@@ -56,6 +56,19 @@ class ImageDisplayManager:
         """,
         )
 
+        # Create placeholder text
+        self.placeholder_text = Element(
+            "div",
+            parent=self.image_container,
+            style="""
+            font-size: 18px;
+            color: #666;
+            text-align: center;
+            user-select: none;
+        """,
+        )
+        self.placeholder_text.text = "Loading default image..."
+
         # Events
         self.image_element.on("mousemove", self._on_image_mouse_move)
         self.image_element.on("mouseleave", self._on_image_mouse_leave)
