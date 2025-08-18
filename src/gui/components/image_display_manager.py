@@ -6,7 +6,14 @@ from gui.element import Element
 
 
 class ImageDisplayManager:
-    """Manages image display functionality."""
+    """Manages image display functionality.
+
+    ---
+
+    Authors:
+        Jont
+        Ricky
+    """
 
     image_container: Element
     image_element: Element
@@ -24,12 +31,17 @@ class ImageDisplayManager:
         self.current_image_src: str | None = None
         self.cursor_info = cursor_info_element
         self.color_info = color_info_element
-        self._canvas_context: Any | None = None  # noqa: ANN401
+        self._canvas_context: Any | None = None
         self._setup_elements()
 
     def _setup_elements(self) -> None:
-        """Create the image container, image element, and placeholder text."""
+        """Create the image container, image element, and placeholder text.
 
+        ---
+
+        :author: Ricky
+
+        """
         # Image container element
         self.image_container = Element(
             "div",
@@ -41,7 +53,7 @@ class ImageDisplayManager:
             justify-content: center;
             align-items: center;
             position: relative;
-        """,
+            """,
         )
 
         # Image element
@@ -53,7 +65,7 @@ class ImageDisplayManager:
             max-height: 100%;
             display: none;
             object-fit: contain;
-        """,
+            """,
         )
 
         # Create placeholder text
@@ -65,7 +77,7 @@ class ImageDisplayManager:
             color: #666;
             text-align: center;
             user-select: none;
-        """,
+            """,
         )
         self.placeholder_text.text = "Loading default image..."
 
@@ -75,7 +87,16 @@ class ImageDisplayManager:
         self.image_element.on("load", self._on_image_load)
 
     def _on_image_load(self, _event: Any) -> None:  # noqa: ANN401
-        """Prepare an offscreen canvas for pixel color sampling."""
+        """Prepare an offscreen canvas for pixel color sampling.
+
+        Args:
+            _event: The load event
+
+        ---
+
+        :author: Ricky
+
+        """
         try:
             natural_width = self.image_element["naturalWidth"]
             natural_height = self.image_element["naturalHeight"]
@@ -83,12 +104,25 @@ class ImageDisplayManager:
             canvas.width = natural_width
             canvas.height = natural_height
             ctx = canvas.getContext("2d")
+            ctx.willReadFrequently = True
             ctx.drawImage(self.image_element.html_element, 0, 0)
             self._canvas_context = ctx
         except (AttributeError, RuntimeError) as exc:  # pragma: no cover
             print(f"Failed to prepare canvas for color sampling: {exc}")
 
     def _on_image_mouse_move(self, event: Any) -> None:  # noqa: ANN401
+        """Update cursor and color display while the mouse moves over the image.
+
+        Args:
+            event: The mouse event providing client coordinates and element offsets
+
+        ---
+
+        Authors:
+            - Jont (`cursor_info`)
+            - Ricky (`color_info`)
+
+        """
         if not self.current_image_src:
             self.cursor_info.text = ""
             if self.color_info is not None:
@@ -118,7 +152,10 @@ class ImageDisplayManager:
         if self.color_info is not None and self._canvas_context is not None:
             try:
                 pixel = self._canvas_context.getImageData(
-                    intrinsic_mouse_x, intrinsic_mouse_y, 1, 1
+                    intrinsic_mouse_x,
+                    intrinsic_mouse_y,
+                    1,
+                    1,
                 ).data
                 r, g, b = pixel[0], pixel[1], pixel[2]
                 self.color_info.text = f"R: {r} G: {g} B: {b}"
@@ -131,34 +168,79 @@ class ImageDisplayManager:
                 print(f"Color sample error: {exc}")
 
     def _on_image_mouse_leave(self, _event: Any) -> None:  # noqa: ANN401
-        """Clear cursor info when mouse leaves the image."""
+        """Clear info when mouse leaves the image.
+
+        Args:
+            _event: The mouse leave event
+
+        ---
+
+        :author: Jont
+
+        """
         self.cursor_info.text = ""
         if self.color_info is not None:
             self.color_info.text = ""
 
     def display_image(self, image_src: str) -> None:
-        """Display an image in the preview area."""
+        """Display an image in the preview area.
+
+        Args:
+            image_src: The source URL of the image to display
+
+        ---
+
+        :author: Ricky
+
+        """
         self.current_image_src = image_src
         self.image_element["src"] = image_src
         self.image_element["style"].display = "block"
         self.placeholder_text["style"].display = "none"
 
     def hide_image(self) -> None:
-        """Hide the current image (useful during drag operations)."""
+        """Hide the current image. Useful during drag operations.
+
+        ---
+
+        :author: Ricky
+
+        """
         if self.current_image_src:
             self.image_element["style"].display = "none"
 
     def show_image(self) -> None:
-        """Show the current image again."""
+        """Show the current image.
+
+        ---
+
+        :author: Ricky
+
+        """
         if self.current_image_src:
             self.image_element["style"].display = "block"
 
     def show_error(self, message: str) -> None:
-        """Show an error message."""
+        """Print an error message to the console.
+
+        Args:
+            message: The error message to print
+
+        ---
+
+        :author: Ricky
+
+        """
         print(message)
 
     def _reset_placeholder(self) -> None:
-        """Reset placeholder to original state."""
+        """Reset placeholder to original state.
+
+        ---
+
+        :author: Ricky
+
+        """
         if not self.current_image_src:
             self.placeholder_text.text = "Drop an image here or click to upload"
             self.placeholder_text["style"].color = "#666"
